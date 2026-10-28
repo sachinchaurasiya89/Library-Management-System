@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library — Library Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">L</div>
+      <div>
+        <h2>Library</h2>
+        <small>LIBRARY  MANAGEMENT SYSTEM</small>
+      </div>
+    </div>
+
+    <p class="nav-label">MAIN MENU</p>
+    <nav>
+      <button class="nav-item active" data-page="Dashboard">▦ <span>Dashboard</span></button>
+      <button class="nav-item" data-page="Books">▤ <span>Books</span></button>
+      <button class="nav-item" data-page="Students">♙ <span>Students</span></button>
+      <button class="nav-item" data-page="Issue & Return">⇄ <span>Issue & Return</span></button>
+      <button class="nav-item" data-page="Reports">▥ <span>Reports</span></button>
+      <!-- NEW LOGOUT BUTTON -->
+      <button class="nav-item logout-btn" onclick="logout()">⎋ <span>Logout</span></button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <p>AKTU CSE MINI PROJECT</p>
+      <small>Library Management System</small>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">LIBRARY / OVERVIEW</p>
+        <h1 id="pageTitle">Dashboard</h1>
+      </div>
+      <div class="profile">
+        <div class="avatar" id="adminAvatar">A</div>
+        <div>
+          <strong id="adminNameDisplay">Administrator</strong>
+          <small>Admin account</small>
+        </div>
+      </div>
+    </header>
+
+    <section class="welcome">
+      <div>
+        <p class="eyebrow light">YOUR DIGITAL LIBRARY</p>
+        <h2>Knowledge begins here.</h2>
+        <p>Manage books, students, and lending from one place.</p>
+      </div>
+      <div class="welcome-icon">▤</div>
+    </section>
+
+    <section class="toolbar">
+      <div>
+        <h2 id="sectionTitle">Library overview</h2>
+        <p class="muted" id="sectionDesc">A quick look at your library activity.</p>
+      </div>
+      <button class="primary-btn" id="mainActionBtn">+ Add a book</button>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <div class="stat-top"><span>Total Books</span><span class="stat-icon blue">▤</span></div>
+        <h2 id="totalBooks">0</h2>
+        <p>Books in the catalogue</p>
+      </article>
+      <article class="stat-card">
+        <div class="stat-top"><span>Students</span><span class="stat-icon purple">♙</span></div>
+        <h2 id="totalStudents">0</h2>
+        <p>Registered students</p>
+      </article>
+      <article class="stat-card">
+        <div class="stat-top"><span>Books Issued</span><span class="stat-icon orange">⇄</span></div>
+        <h2 id="issuedBooks">0</h2>
+        <p>Currently on loan</p>
+      </article>
+      <article class="stat-card">
+        <div class="stat-top"><span>Available</span><span class="stat-icon green">✓</span></div>
+        <h2 id="availableBooks">0</h2>
+        <p>Ready to be issued</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <h2 id="tableTitle">Book catalogue</h2>
+          <p class="muted" id="tableDesc">Search and explore the collection.</p>
+        </div>
+        <input id="searchInput" type="search" placeholder="Search..." aria-label="Search">
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="dataTable"></tbody>
+        </table>
+      </div>
+      <p id="emptyMessage" class="empty hidden">No matching records found.</p>
+    </section>
+
+    <footer>
+      Libra Library Management System <span>•</span> AKTU CSE Mini Project
+    </footer>
+  </main>
+
+  <!-- BOOK MODAL -->
+  <dialog id="bookDialog">
+    <form id="bookForm">
+      <h2>Add a new book</h2>
+      <p class="muted">Add a book to the database catalogue.</p>
+      <label for="bookName">Book title</label>
+      <input id="bookName" required maxlength="100" placeholder="e.g. Computer Networks">
+      <label for="bookAuthor">Author</label>
+      <input id="bookAuthor" required maxlength="80" placeholder="Author name">
+      <label for="bookCategory">Category</label>
+      <select id="bookCategory">
+        <option>Computer Science</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Literature</option>
+        <option>Other</option>
+      </select>
+      <label for="bookCopies">Total Copies</label>
+      <input id="bookCopies" type="number" min="1" value="1" required>
+
+      <div class="dialog-actions">
+        <button type="button" class="secondary-btn" id="cancelBookBtn">Cancel</button>
+        <button type="submit" class="primary-btn">Add book</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- STUDENT MODAL -->
+  <dialog id="studentDialog">
+    <form id="studentForm">
+      <h2>Add a new student</h2>
+      <p class="muted">Register a new student to the library.</p>
+      <label for="studentName">Student Name</label>
+      <input id="studentName" required maxlength="150" placeholder="e.g. Rahul Kumar">
+      <label for="studentRoll">Roll Number</label>
+      <input id="studentRoll" required maxlength="50" placeholder="e.g. CS2024001">
+      <label for="studentEmail">Email Address</label>
+      <input id="studentEmail" type="email" required maxlength="150" placeholder="student@example.com">
+      <div class="dialog-actions">
+        <button type="button" class="secondary-btn" id="cancelStudentBtn">Cancel</button>
+        <button type="submit" class="primary-btn">Add student</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ISSUE BOOK MODAL -->
+  <dialog id="issueDialog">
+    <form id="issueForm">
+      <h2>Issue a Book</h2>
+      <p class="muted">Select a book and assign it to a student.</p>
+      
+      <label for="issueBookSelect">Select Book (Available only)</label>
+      <select id="issueBookSelect" required></select>
+      
+      <label for="issueStudentSelect">Select Student</label>
+      <select id="issueStudentSelect" required></select>
+      
+      <label for="issueDueDate">Due Date</label>
+      <input type="date" id="issueDueDate" required>
+      
+      <div class="dialog-actions">
+        <button type="button" class="secondary-btn" id="cancelIssueBtn">Cancel</button>
+        <button type="submit" class="primary-btn">Issue Book</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
